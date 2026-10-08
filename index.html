@@ -682,6 +682,16 @@
         </header>
 
         <main class="view-section active" id="view-categories">
+            <!-- شريط تنبيه إغلاق المطعم المباشر -->
+            <div id="store-closed-banner" style="display:none; background:rgba(255,51,68,0.15); border:2px solid var(--neon-red); border-radius:14px; padding:12px 14px; text-align:center; margin-bottom:14px; animation:bannerPulse 2s infinite alternate;">
+                <div style="color:var(--neon-red); font-size:1.05rem; font-weight:900;">
+                    <i class="fas fa-door-closed" style="margin-left:6px;"></i> عذراً المطعم مغلق حالياً الرجاء المعاودة لاحقاً
+                </div>
+                <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;" id="store-closed-sub-text">
+                    نستقبل طلباتكم يومياً، عدا أوقات الصيانة والاستراحة المحددة.
+                </div>
+            </div>
+
             <div class="page-title"><span>المنيو</span> اختر القسم</div>
             <div class="grid-layout" id="categories-grid"></div>
 
@@ -1313,7 +1323,12 @@
             }
         }
 
-        function setOrderType(type, showAlert = true) {
+        async function initiateOrderSubmission() {
+            if (isStoreCurrentlyClosed()) {
+                return showUIMotionToast('عذراً المطعم مغلق حالياً الرجاء المعاودة لاحقاً', 'fa-door-closed', 'var(--neon-red)');
+            }
+
+            const name = document.getElementById('cust-name-input').value.trim();
             selectedOrderType = type;
             document.getElementById('btn-delivery').classList.toggle('selected', type === 'delivery');
             document.getElementById('btn-pickup').classList.toggle('selected', type === 'pickup');
